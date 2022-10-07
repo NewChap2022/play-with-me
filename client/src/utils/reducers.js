@@ -1,34 +1,48 @@
 import {
-    ADD_ARTICLE,
-    UPDATE_ARTICLE,
-    DELETE_ARTICLE
+    UPDATE_TAGS,
+    UPDATE_CURRENT_TAG,
+    UPDATE_ACTIVITIES,
+    UPDATE_USER_ACTIVITIES,
+    REMOVE_USER_ACTIVITY
 } from "./actions";
 
 export const reducer = (state, action) => {
-    switch(action.type) {
-        case ADD_ARTICLE:
+    switch (action.type) {
+        case UPDATE_TAGS:
             return {
                 ...state,
-                articles: [...state.articles, action.article]
+                tags: [...action.tags]
             };
-        case UPDATE_ARTICLE:
-            return {
-                ...state,
-                articles: state.articles.map(article => {
-                    return action._id === article._id ?
-                    action.article : article
-                })
-            };
-        case DELETE_ARTICLE:
-            let newState = state.articles.filter(article => {
-                return article._id !== action._id
-            });
 
+        case UPDATE_CURRENT_TAG:
             return {
                 ...state,
-                articles: newState
-            }
-        default:
+                currentTag: action.currentTag
+            };
+        
+        case UPDATE_ACTIVITIES:
+            return {
+                ...state,
+                activities: [...action.activities]
+            };
+        
+        case UPDATE_USER_ACTIVITIES:
+            return {
+                ...state,
+                userActivities: [...action.user.activities]
+            };
+
+        case REMOVE_USER_ACTIVITY:
+           let newState = state.cart.filter(activity => {
+            return activity._id !== action._id;
+           });
+
+           return {
+            ...state,
+            useActivities: newState
+           };
+
+        default: 
             return state;
     }
-};
+}

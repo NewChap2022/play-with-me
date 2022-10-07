@@ -1,6 +1,5 @@
 const { AuthenticationError } = require('apollo-server-express');
 const { User, Activity, Comment, Like, Tag } = require('../models');
-const { populate } = require('../models/User');
 const { signToken } = require('../utils/auth');
 
 const resolvers = {
@@ -30,10 +29,10 @@ const resolvers = {
             }
             throw new AuthenticationError('Not logged in');
         },
-        activities: async (parent, { tags, title }) => {
+        activities: async (parent, { tag, title }) => {
             const params = {};
-            if (tags) {
-                params.tags = tags;
+            if (tag) {
+                params.tag = tag;
             }
 
             if (title) {
@@ -83,8 +82,14 @@ const resolvers = {
                 const comment = await Comment.create(args);
 
                 await User.findByIdAndUpdate(
-                    {_id: context.user._id}, 
+                    { _id: context.user._id}, 
                     { $push: { comments: comment._id }},
+                    { new: true }
+                );
+    
+                const activity = await Activity.findByIdAndUpdate(
+                    { _id: args.activity },
+                    { $push: { comments: comment._id } },
                     { new: true }
                 );
 
@@ -99,6 +104,12 @@ const resolvers = {
                 await User.findByIdAndUpdate(
                     {_id: context.user._id}, 
                     { $push: { likes: like._id }},
+                    { new: true }
+                );
+
+                await Activity.findByIdAndUpdate(
+                    { _id: args.activity },
+                    { $push: { likes: like._id } },
                     { new: true }
                 );
 

@@ -37,7 +37,7 @@ const typeDefs = gql`
         _id: ID
         username: String
         email: String
-        profile_image: String
+        profileImage: String
         activities: [Activity]
         comments: [Comment]
         likes: [Like]
@@ -56,8 +56,8 @@ const typeDefs = gql`
     }
 
     type Mutation {
-        addUser(username: String!, email: String!, password: String): Auth
-        addActivity(title: String!, content: String!, author: String!): Activity
+        addUser(username: String!, email: String!, password: String!, profileImage: String): Auth
+        addActivity(title: String!, content: String!, author: ID!, tags: [ID!]): Activity
         addComment(commentBody: String!, user: ID!, activity: ID!): Comment
         addLike(user: ID!, activity: ID!): Like
         updateUser(username: String, email: String, password: String): User

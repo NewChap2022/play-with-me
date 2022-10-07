@@ -22,9 +22,8 @@ const userSchema = new Schema({
         required: true,
         minlength: 6
     },
-    profile_image: {
-        data: Buffer, 
-        contentType: String 
+    profileImage: {
+       type: String
     },
     activities: [{
         type: Schema.Types.ObjectId,

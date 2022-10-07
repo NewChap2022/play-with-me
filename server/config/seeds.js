@@ -20,7 +20,8 @@ db.once('open', async () => {
     const user = await User.create({
         username: 'test',
         email: 'test@test.com',
-        password: 'test123'
+        password: 'test123',
+        profileImage: 'uploads\\avatars\\avatar-1665152477648.jpeg'
     })
 
     console.log('User seeded');
@@ -50,7 +51,6 @@ db.once('open', async () => {
         activity: activity._id
     });
 
-    console.log(comment)
 
     await User.findByIdAndUpdate(
         { _id: user._id },
