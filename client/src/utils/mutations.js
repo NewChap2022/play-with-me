@@ -27,7 +27,7 @@ export const ADD_USER = gql`
     }
 `;
 
-export const ADD_ACTIVITY = gql `
+export const ADD_ACTIVITY = gql`
 mutation Mutation($title: String!, $content: String!, $tags: [ID]!) {
     addActivity(title: $title, content: $content, tags: $tags) {
       _id
@@ -104,14 +104,8 @@ export const UPDATE_ACTIVITY = gql`
             _id
             title
             content
-            author {
-                _id
-                username
-            }
-            createdAt
             tags {
                 _id
-                name
             }
         }
     }

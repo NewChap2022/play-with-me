@@ -30,9 +30,11 @@ export default function ActivityCard({activity, onDelete}) {
             }
             return content;
         };
+        
         const text = new DOMParser()
             .parseFromString(html, "text/html")
             .documentElement.textContent;
+        // const image = new DOMParser()
         return showPreviewContent(text);
     };
 

@@ -5,7 +5,7 @@ const preloadedState = {
     tags: [],
     currentTag: '',
     userActivities: [],
-    editActivity: []
+    editActivity: {}
 }
 export const store = configureStore({
     reducer,
