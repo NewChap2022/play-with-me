@@ -26,7 +26,7 @@ var storage = multer.diskStorage({
     filename: (req, file, cb) => {
         const ext = file.mimetype.split("/")[1];
         cb(null, `${file.fieldname}-${Date.now()}.${ext}`);
-      },
+    },
 })
 
 const upload = multer({
@@ -46,9 +46,13 @@ app.post('/profile', (req, res, next) => {
     });
 });
 
-// app.get('*', (req, res) => {
-//     res.sendFile(path.join(__dirname, '../client/build/index.html'));
-// });
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, '../client/build')));
+};
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/build/index.html'));
+});
 
 const startApolloServer = async (typeDefs, resolvers) => {
     await server.start();
