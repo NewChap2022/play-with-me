@@ -7,6 +7,7 @@ import { QUERY_ACTIVITIES } from '../../utils/queries';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box'
 
 export default function ActivityList() {
     const currentTag = useSelector(state => state.currentTag);
@@ -28,12 +29,12 @@ export default function ActivityList() {
     }
 
     return (
-        <div>
+        <Box p={2}>
             <Typography variant="h2" textAlign="center" fontFamily="Indie Flower">ACTIVITIES</Typography>
             {data && data.activities.length ? (
-                <Grid container spacing={2}>
+                <Grid container spacing={2} sx={{display: "flex", alignItems: "stretch"}}>
                     {filterActivities().map(activity => (
-                        <Grid item key={activity._id} xs={12} md={6} lg={3}>
+                        <Grid item key={activity._id} xs={12} md={6} lg={3} >
                             <ActivityCard
                                 activity={activity}
                             />
@@ -44,6 +45,6 @@ export default function ActivityList() {
                 <h3>There aren't any activities yet!</h3>
             )}
             {loading ? <CircularProgress /> : null}
-        </div>
+        </Box>
     );
 };

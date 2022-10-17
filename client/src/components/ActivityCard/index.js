@@ -7,17 +7,15 @@ import { REMOVE_USER_ACTIVITY, UPDATE_EDIT_ACTIVITY } from '../../utils/actions'
 
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import CardMedia from "@mui/material/CardMedia";
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 
-export default function ActivityCard({activity, onDelete}) {
+export default function ActivityCard({ activity, onDelete }) {
     const [display] = useState(useLocation().pathname === "/dashboard" ? true : false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [deleteActivity, {error}] = useMutation(DELETE_ACTIVITY);
-    if (error) {
-        console.log(error);
-    }
+    const [deleteActivity] = useMutation(DELETE_ACTIVITY);
 
     let tags = ""
     activity.tags.forEach(tag => tags += `• ${tag.name}  `);
@@ -30,12 +28,24 @@ export default function ActivityCard({activity, onDelete}) {
             }
             return content;
         };
-        
+
         const text = new DOMParser()
             .parseFromString(html, "text/html")
             .documentElement.textContent;
-        // const image = new DOMParser()
-        return showPreviewContent(text);
+        var ele = document.createElement("div");
+        ele.innerHTML = html;
+        var image = ele.querySelector("img");
+        if (image) {
+            return <CardMedia
+            component="img"
+            height="194"
+            image={image.src}
+            alt="activity image"
+          />
+        }
+        return <Typography variant="body2">
+        {showPreviewContent(text)}
+        </Typography>;
     };
 
     const deleteHandle = async (e) => {
@@ -43,7 +53,7 @@ export default function ActivityCard({activity, onDelete}) {
         const id = e.currentTarget.id;
         try {
             await deleteActivity({
-                variables: {id: id}
+                variables: { id: id }
             });
             dispatch({
                 type: REMOVE_USER_ACTIVITY,
@@ -64,11 +74,11 @@ export default function ActivityCard({activity, onDelete}) {
         navigate('/edit');
 
     }
-    
+
     return (
-        <Card>
+        <Card sx={{height: "100%"}}>
             <CardContent>
-                <Link to={`/activities/${activity._id}`} style={{textDecoration: "none", color: "black"}} >
+                <Link to={`/activities/${activity._id}`} style={{ textDecoration: "none", color: "black" }} >
                     <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                         {tags}
                     </Typography>
@@ -78,16 +88,17 @@ export default function ActivityCard({activity, onDelete}) {
                     <Typography sx={{ mb: 1.5 }} color="text.secondary">
                         {activity.author.username}
                     </Typography>
-                    <Typography variant="body2">
+                    {extractContent(activity.content)}
+                    {/* <Typography variant="body2">
                         {extractContent(activity.content)}
-                    </Typography>
+                    </Typography> */}
                 </Link>
-                {display ? 
-                <>
-                    <Button sx={{ mt: 1, mx: 1 }} variant="contained" size="small" onClick={editHandle}>Edit</Button>
-                    <Button sx={{ mt: 1, mx: 1 }} variant="contained" size="small" id={activity._id} onClick={(e) => deleteHandle(e)}>Delete</Button>
-                </> : null}
-                
+                {display ?
+                    <>
+                        <Button sx={{ mt: 1, mx: 1 }} variant="contained" size="small" onClick={editHandle}>Edit</Button>
+                        <Button sx={{ mt: 1, mx: 1 }} variant="contained" size="small" id={activity._id} onClick={(e) => deleteHandle(e)}>Delete</Button>
+                    </> : null}
+
             </CardContent>
         </Card>
     );

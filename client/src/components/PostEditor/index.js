@@ -103,7 +103,7 @@ export default function PostEditor({ activity }) {
     };
 
     return (
-        <Box component="form" className="text-editor" my={2} mx={5} style={{ display: "flex", flexDirection: "column" }} onSubmit={handleSubmit}>
+        <Box component="form" className="text-editor" my={2} mx={5} p={2} style={{ display: "flex", flexDirection: "column", backgroundColor: "rgba(255, 255, 255, 0.5)" }} onSubmit={handleSubmit}>
             {/* <Typography variant="h5" textAlign="center" fontWeight="bold" fontFamily="Indie Flower, cursive">Add a New Activity</Typography> */}
             <TextField
                 margin="normal"
@@ -122,7 +122,7 @@ export default function PostEditor({ activity }) {
                 placeholder={"Let's play ..."}
                 modules={modules}
                 formats={formats}
-                style={{ height: "300px" }}
+                style={{ height: 200 }}
             />
             <FormGroup style={{ display: "inline-block", marginTop: 10, textAlign: "center" }}>
                 <Typography fontWeight="bold">Tags fit your activity</Typography>

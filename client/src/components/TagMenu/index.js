@@ -13,8 +13,6 @@ import Button from '@mui/material/Button';
 export default function TagMenu() {
     const dispatch = useDispatch();
     const tags = useSelector(state => state.tags);
-    const userActivities = useSelector(state => state.userActivities);
-    console.log(userActivities);
     const { loading, data } = useQuery(QUERY_TAGS);
 
     useEffect(() => {
@@ -38,7 +36,8 @@ export default function TagMenu() {
             display="flex-wrap"
             justifyContent="center"
             textAlign="center"
-            m={2}
+            p={2}
+            mx={2}
         >
             {tags.map((tag) => (
                 <Button

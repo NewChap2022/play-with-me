@@ -85,7 +85,7 @@ export default function Dashboard() {
     const username = Auth.getProfile().data.username;
     const imgUrl = window.location.protocol + "//" + window.location.host + "\\" + Auth.getProfile().data.profileImage;
     return (
-        <Box>
+        <Box style={{flex: 1}}>
             <Box
                 height={100}
                 sx={{
