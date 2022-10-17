@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-
-import { pluralize } from "../utils/helpers";
+import Parser from 'html-react-parser';
 import Auth from '../utils/auth';
 
 import { useMutation, useQuery } from '@apollo/client';
@@ -20,10 +19,16 @@ import TextareaAutosize from '@mui/material/TextareaAutosize';
 import LikeButton from '../components/LikeButton';
 
 
-export default function ActivityDetail() {
+export default function ActivityDetail () {
     const { id } = useParams();
+    const [comments, setComments] = useState([]);
+   
     const { loading, data: activityData } = useQuery(QUERY_ACTIVITY, {
-        variables: { id: id }
+        fetchPolicy: "network-only",
+        variables: { id: id },
+        onCompleted: (activityData) => {
+            setComments(activityData.activity.comments);
+        }
     });
 
     const [addComment] = useMutation(ADD_COMMENT);
@@ -32,22 +37,29 @@ export default function ActivityDetail() {
 
     const handleFormSubmit = async (event) => {
         event.preventDefault();
-        const data = new FormData(event.currentTarget);
+        const form = event.currentTarget
+        const data = new FormData(form);
         try {
-            await addComment({
+            const comment = await addComment({
                 variables: {
                     commentBody: data.get("commentBody"), 
-                    user: Auth.getProfile().data._id,
                     activity: id
                 }
-            })
-            window.location.reload();
+            });
+            setComments((comments) => {
+                const newComments = [...comments];
+                newComments.push(comment.data.addComment);
+                return newComments;
+            });
+            form.reset();
         } catch (error) {
             setErrorMessage(error.message)
         }
-    }
+    };
+    
     return (
         <Box m={2}>
+            
             {activityData ? (
                 <Paper elevation={3}>
                     <Typography fontFamily="indie flower" pt={2} textAlign="center" variant="h4">
@@ -59,20 +71,16 @@ export default function ActivityDetail() {
                     <Typography px={2} textAlign="right" fontStyle="italic">
                         {activityData.activity.createdAt}
                     </Typography>
-                    <Typography p={2} fontSize={20}>
-                        {activityData.activity.content}
-                    </Typography>
+                    <Box p={2} fontSize={20}>
+                        {Parser(activityData.activity.content)}
+                    </Box>
                     {Auth.loggedIn() ? (
-                        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                            <Typography py={2} px={5}>
-                                {activityData.activity.likeCount} {pluralize("like", activityData.activity.likeCount)}
-                            </Typography>
-                            <LikeButton id={id}/>
-                        </Box>
+                        <LikeButton id={id} likeCount={activityData.activity.likeCount}/>
                     ) : null}
                     {Auth.loggedIn() ? (
                         <Box 
                             component="form" 
+                            id="commentForm"
                             noValidate 
                             onSubmit={handleFormSubmit}
                             sx={{
@@ -103,7 +111,7 @@ export default function ActivityDetail() {
                     {Auth.loggedIn() ? (
                         <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
                             <Typography variant='h5' px={2} bgcolor="lightblue">Comments</Typography>
-                            {activityData.activity.comments.map((comment, index) => (
+                            {comments.map((comment, index) => (
                                 <ListItem key={index} alignItems="flex-start">
                                     <ListItemText sx={{ px: 2 }}
                                         key={comment._id}

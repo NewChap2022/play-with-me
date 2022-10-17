@@ -1,65 +1,92 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
-import { QUERY_USER } from '../../utils/queries';
-import { ADD_LIKE } from '../../utils/mutations';
-import Auth from "../../utils/auth";
+import { QUERY_ME_LIKES } from '../../utils/queries';
+import { ADD_LIKE, DELETE_LIKE } from '../../utils/mutations';
+import { pluralize } from "../../utils/helpers";
 
-import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import GreyHeart from '../../assets/images/grey_heart.png';
-import './style.css';
+import RedHeart from '../../assets/images/red_heart.png';
 
-export default function LikeButton(props) {
-    const [likeStatus, setLikeStatus] = useState()
+export default function LikeButton({ id, likeCount }) {
+    const [likeStatus, setLikeStatus] = useState();
+    const [likeId, setLikeId] = useState();
+    const [numberOfLikes, setNumberOfLikes] = useState(likeCount);
+
     const checkLikeStatus = (id, likes) => {
-        return likes.some(like => like.activity._id === id)
+        const index = likes.findIndex(like => like.activity._id === id);
+        if (index === -1) {
+            return false;
+        } else {
+            setLikeId(likes[index]._id);
+            return true;
+        }
     };
-    const { id } = props;
-    const { data } = useQuery(QUERY_USER, {
-        onCompleted: () => {
-            setLikeStatus(checkLikeStatus(id, data.user.likes))
+    const { data } = useQuery(QUERY_ME_LIKES, {
+        onCompleted: (data) => {
+            setLikeStatus(checkLikeStatus(id, data.me.likes));
         }
     });
 
-    const [addLike, { error }] = useMutation(ADD_LIKE);
+    const [addLike, { addError }] = useMutation(ADD_LIKE);
+    const [deleteLike, { deleteError }] = useMutation(DELETE_LIKE);
 
     const handleLike = async () => {
         try {
-            await addLike({
+            const like = await addLike({
                 variables: {
-                    user: Auth.getProfile().data._id,
                     activity: id
                 }
             });
+            setLikeId(like.data.addLike._id);
+            setNumberOfLikes(numberOfLikes + 1);
             setLikeStatus(true);
         } catch (error) {
             console.log(error);
         }
     }
-    // useEffect(() => {
-    //     if (data) {
-    //         if (data.user.likes.some(like => like.activity._id)) {
-    //             console.log("true")
-    //         } else {
-    //             console.log("false")
-    //         }
-    //     }
-    // }, [data, loading])
-    // checkLikeStatus(id, data.user.likes)
+
+    const handleUnlike = async () => {
+        try {
+            await deleteLike({
+                variables: {
+                    id: likeId
+                }
+            });
+            setLikeStatus(false);
+            setNumberOfLikes(numberOfLikes - 1);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
         <div>
             {data ? (
-                <div>
+                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                    <Typography py={2} px={5}>
+                        {numberOfLikes} {pluralize("like", likeCount)}
+                    </Typography>
                     {likeStatus ? (
-                        <Typography py={2} px={5}>❤️</Typography>
+                        <Button sx={{ py: 2, px: 5 }} onClick={handleUnlike}>
+                            <img src={RedHeart} alt="red heart" style={{width: "30px", marginLeft: "10px"}} />
+                        </Button>
                     ) : (
-                        <Button sx={{ py: 2, px: 5 }} onClick={handleLike}><img src={GreyHeart} alt="grey heart" className='heart' /></Button>
+                        <Button sx={{ py: 2, px: 5 }} onClick={handleLike}>
+                            <img src={GreyHeart} alt="grey heart" style={{width: "30px", marginLeft: "10px"}} />
+                        </Button>
                     )}
-                </div>
-            ) : null}
-            {error ? (
-                <p className="error-text">Something Went Wrong</p>
-            ) : null}
-        </div>
+                </Box>
+
+            ) : null
+            }
+            {
+                addError || deleteError ? (
+                    <p className="error-text">Something Went Wrong</p>
+                ) : null
+            }
+        </div >
     )
 };

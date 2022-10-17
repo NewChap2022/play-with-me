@@ -4,8 +4,8 @@ import { reducer } from './reducers';
 const preloadedState = {   
     tags: [],
     currentTag: '',
-    activities: [],
-    userActivities: []
+    userActivities: [],
+    editActivity: []
 }
 export const store = configureStore({
     reducer,

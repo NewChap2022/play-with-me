@@ -50,20 +50,21 @@ const typeDefs = gql`
 
     type Query {
         tags: [Tag]
-        user: User
+        me: User
+        user(_id: ID!): User
         activities(tags: [ID], title: String): [Activity]
         activity(_id: ID!): Activity
     }
 
     type Mutation {
         addUser(username: String!, email: String!, password: String!, profileImage: String): Auth
-        addActivity(title: String!, content: String!, author: ID!, tags: [ID!]): Activity
-        addComment(commentBody: String!, user: ID!, activity: ID!): Comment
-        addLike(user: ID!, activity: ID!): Like
+        addActivity(title: String!, content: String!, tags: [ID]!): Activity
+        addComment(commentBody: String!, activity: ID!): Comment
+        addLike(activity: ID!): Like
         updateUser(username: String, email: String, password: String): User
-        updateActivity(title: String, content: String): Activity
-        updateComment(commentBody: String!): Comment
-        login(email: String!, password: String): Auth
+        updateActivity(_id: ID!, title: String, content: String, tags: [ID]): Activity
+        updateComment(_id: ID!, commentBody: String!): Comment
+        login(email: String!, password: String!): Auth
         deleteActivity(_id: ID!): Activity
         deleteComment(_id: ID!): Comment
         deleteLike(_id: ID!): Like

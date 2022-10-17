@@ -17,9 +17,7 @@ import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt
 
 import Auth from '../../utils/auth';
 
-import "./style.css"
-
-export default function Nav () {
+export default function Nav() {
   let nav = [];
   let username = "";
   let imgUrl = "";
@@ -29,12 +27,8 @@ export default function Nav () {
     imgUrl = window.location.protocol + "//" + window.location.host + "\\" + Auth.getProfile().data.profileImage;
     nav = [
       {
-        page: 'Search',
-        link: '/search'
-      },
-      {
         page: 'Post an Activity',
-        link: '/post'
+        link: '/newpost'
       }
     ]
   } else {
@@ -76,19 +70,17 @@ export default function Nav () {
           <Typography
             variant="h6"
             noWrap
-            component="a"
-            href="/"
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
               fontFamily: 'Rock Salt, curly',
+              fontSize: 15,
               fontWeight: 700,
               letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
+              color: 'inherit'
             }}
           >
-            PLAY WITH ME
+            <Link to="/" style={{color: 'inherit', textDecoration: 'none'}}>PLAY WITH ME</Link>
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -122,7 +114,7 @@ export default function Nav () {
             >
               {nav.map((element) => (
                 <MenuItem key={element.page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center"><Link className='nav-link-sm' to={element.link}>{element.page}</Link></Typography>
+                  <Typography textAlign="center"><Link style={{ textDecoration: "none", color: "black" }} to={element.link}>{element.page}</Link></Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -131,21 +123,19 @@ export default function Nav () {
           <Typography
             variant="h5"
             noWrap
-            component="a"
-            href="/"
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
               flexGrow: 1,
               fontFamily: 'Rock Salt, curly',
+              fontSize: 15,
               fontWeight: 700,
               letterSpacing: '.3rem',
               color: 'inherit',
               textDecoration: 'none',
             }}
           >
-
-            Play With Me
+            <Link to="/" style={{color: 'inherit', textDecoration: 'none'}}>PLAY WITH ME</Link>
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {nav.map((element) => (
@@ -154,7 +144,7 @@ export default function Nav () {
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
-                <Link className='nav-link-lg' to={element.link}>{element.page}</Link>
+                <Link style={{ textDecoration: "none", color: "white" }} to={element.link}>{element.page}</Link>
               </Button>
             ))}
           </Box>
@@ -182,10 +172,14 @@ export default function Nav () {
                 onClose={handleCloseUserMenu}
               >
                 <MenuItem onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center"><Link className="nav-link-sm" to="/dashboard">Dashboard</Link></Typography>
+                  <Typography textAlign="center">
+                    <Link className="nav-link-sm" to="/dashboard" style={{textDecoration: "none", color: "black"}}>
+                      Dashboard
+                    </Link>
+                  </Typography>
                 </MenuItem>
                 <MenuItem onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center"><a className="nav-link-sm" href="/" onClick={() => Auth.logout()}>Logout</a></Typography>
+                  <Typography textAlign="center" color="black" onClick={() => Auth.logout()}>Logout</Typography>
                 </MenuItem>
               </Menu>
             </Box>) : (<></>)}

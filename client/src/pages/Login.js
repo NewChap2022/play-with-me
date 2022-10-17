@@ -19,9 +19,9 @@ import LoginImage from '../assets/images/login.jpg';
 
 export default function Login() {
     const [login] = useMutation(LOGIN);
-    
+
     const [errorMessage, setErrorMessage] = useState("");
-    
+
     if (Auth.loggedIn()) {
         window.location.assign('/');
         return;
@@ -29,12 +29,12 @@ export default function Login() {
     const handleSubmit = async (event) => {
         const validateEmail = (email) => {
             return String(email)
-              .toLowerCase()
-              .match(
-                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-              );
-          };
-        
+                .toLowerCase()
+                .match(
+                    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+                );
+        };
+
         const validatePassword = (password) => {
             if (password.length >= 6) {
                 return true;
@@ -42,7 +42,7 @@ export default function Login() {
                 return false;
             }
         };
-        
+
         event.preventDefault();
         const data = new FormData(event.currentTarget);
 
@@ -51,7 +51,7 @@ export default function Login() {
             return;
         }
         if (!validatePassword(data.get('password'))) {
-            setErrorMessage ("Password has at least 6 characters!");
+            setErrorMessage("Password has at least 6 characters!");
             return;
         }
 

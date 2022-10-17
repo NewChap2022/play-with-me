@@ -1,7 +1,6 @@
 import React from "react";
-import TagMenu from "../components/Tag";
+import TagMenu from "../components/TagMenu";
 import ActivityList from "../components/ActivityList";
-
 
 export default function Home () {
     return (

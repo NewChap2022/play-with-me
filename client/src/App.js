@@ -14,6 +14,10 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import ActivityDetail from './pages/ActivityDetail';
+import Dashboard from './pages/Dashboard';
+import NoMatch from './pages/NoMatch';
+import NewPost from './pages/NewPost';
+import EditActivity from './pages/EditActivity';
 
 import { Provider } from 'react-redux';
 import { store } from './utils/store';
@@ -54,12 +58,28 @@ function App() {
                   element={<ActivityDetail />}
                 />
                 <Route
+                  path="/edit"
+                  element={<EditActivity />}
+                />
+                <Route
                   path="/login"
                   element={<Login />}
                 />
                 <Route
                   path="/signup"
                   element={<SignUp />}
+                />
+                <Route
+                  path="/dashboard"
+                  element={<Dashboard />}
+                />
+                <Route
+                  path="/newpost"
+                  element={<NewPost />}
+                />
+                <Route
+                  path="*"
+                  element={<NoMatch />}
                 />
               </Routes>
             </Provider>
