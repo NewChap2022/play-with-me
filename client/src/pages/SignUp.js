@@ -86,7 +86,8 @@ export default function SignUp() {
             const data = await response.json();
             profileImage = data.path;
         } else {
-            const res = await response.json()
+            const res = await response.json();
+            console.log(JSON.stringify(error, null, 2));
             setErrorMessage(res.message);
         }
 
