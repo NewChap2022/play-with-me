@@ -62,24 +62,24 @@ export default function SignUp() {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
 
-        if (!data.get('username')) {
-            setErrorMessage("Please enter a username!");
-        };
+        // if (!data.get('username')) {
+        //     setErrorMessage("Please enter a username!");
+        // };
 
-        if (!validateEmail(data.get('email'))) {
-            setErrorMessage("Please enter a valid email!");
-            return;
-        }
-        if (!validatePassword(data.get('password'))) {
-            setErrorMessage("Password has at least 6 characters!");
-            return;
-        }
+        // if (!validateEmail(data.get('email'))) {
+        //     setErrorMessage("Please enter a valid email!");
+        //     return;
+        // }
+        // if (!validatePassword(data.get('password'))) {
+        //     setErrorMessage("Password has at least 6 characters!");
+        //     return;
+        // }
 
         let profileImage = "";
 
         const response = await fetch("/profile", {
             method: 'POST',
-            body: data
+            body: data.get('avatar')
         })
 
         if (response.ok) {
@@ -87,7 +87,6 @@ export default function SignUp() {
             profileImage = data.path;
         } else {
             const res = await response.json();
-            console.log(JSON.stringify(error, null, 2));
             setErrorMessage(res.message);
         }
 
