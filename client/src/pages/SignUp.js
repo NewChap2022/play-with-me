@@ -144,7 +144,7 @@ export default function SignUp() {
                             autoComplete="email"
                             autoFocus
                         />
-                        <Button
+                        {/* <Button
                             variant="contained"
                             component="label"
                         >
@@ -162,7 +162,7 @@ export default function SignUp() {
                             <Box my={2}>
                                 <img src={imgData} alt="preview of profile pic" width="100" />
                             </Box>
-                        ) : null}
+                        ) : null} */}
                         <TextField
                             margin="normal"
                             required
