@@ -21,26 +21,26 @@ export default function SignUp() {
     const [addUser, { error }] = useMutation(ADD_USER);
 
     const [errorMessage, setErrorMessage] = useState("");
-    const [imgData, setImgData] = useState(null)
+    // const [imgData, setImgData] = useState(null)
 
-    const uploadImage = (e) => {
-        let file = e.target.files[0];
+    // const uploadImage = (e) => {
+    //     let file = e.target.files[0];
 
-        if (!file) {
-            return false;
-        }
+    //     if (!file) {
+    //         return false;
+    //     }
 
-        if (file.size > 10e6) {
-            setErrorMessage("Please upload a file smaller than 10 MB");
-            return false;
-        }
+    //     if (file.size > 10e6) {
+    //         setErrorMessage("Please upload a file smaller than 10 MB");
+    //         return false;
+    //     }
 
-        const reader = new FileReader();
-        reader.addEventListener("load", () => {
-            setImgData(reader.result);
-        });
-        reader.readAsDataURL(e.target.files[0]);
-    }
+    //     const reader = new FileReader();
+    //     reader.addEventListener("load", () => {
+    //         setImgData(reader.result);
+    //     });
+    //     reader.readAsDataURL(e.target.files[0]);
+    // }
 
     const handleSubmit = async (event) => {
         const validateEmail = (email) => {
@@ -76,26 +76,26 @@ export default function SignUp() {
             return;
         }
 
-        let profileImage = "";
+        // let profileImage = "";
 
-        if (data.get('avatar').name) {
-            const response = await fetch("/profile", {
-                method: 'POST',
-                body: data
-            })
+        // if (data.get('avatar').name) {
+        //     const response = await fetch("/profile", {
+        //         method: 'POST',
+        //         body: data
+        //     })
 
-            if (response.ok) {
-                const data = await response.json();
-                profileImage = data.path;
-            } else {
-                const res = await response.json();
-                setErrorMessage(res.message);
-            }
-        }
+        //     if (response.ok) {
+        //         const data = await response.json();
+        //         profileImage = data.path;
+        //     } else {
+        //         const res = await response.json();
+        //         setErrorMessage(res.message);
+        //     }
+        // }
 
         try {
             const mutationResponse = await addUser({
-                variables: { username: data.get('username'), email: data.get('email'), password: data.get('password'), profileImage: profileImage }
+                variables: { username: data.get('username'), email: data.get('email'), password: data.get('password')}
             });
             const token = mutationResponse.data.addUser.token;
             Auth.login(token);
